@@ -13,6 +13,7 @@ class LingottoFiere:
         self._Espositori = {}
 
 
+
     def __str__(self):
         return f"{self.__nome} : {len(self.__Stand)} {len(self.__Espositori)}"
 
