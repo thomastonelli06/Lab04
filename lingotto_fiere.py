@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from operator import itemgetter
 
 from stand import Stand
 from standConPrese import StandConPrese
@@ -31,7 +32,7 @@ class LingottoFiere:
         """Carica i dati (stand ed espositori) dal file"""
 
 
-            try:
+        try:
                 with open(file_path) as file:
                     for line in file:
                         campi = line.strip().split(",")
@@ -53,7 +54,7 @@ class LingottoFiere:
                             standPr = StandPremium(codice, campi[1], campi[2], float(campi[3]), campi[4])
                             self._Stand[codice] = standPr
 
-            except FileNotFoundError:
+        except FileNotFoundError:
                 raise
 
 
@@ -93,5 +94,13 @@ class LingottoFiere:
 
     def stand_ordinati_per_prezzo(self):
         """Restituisce la lista ordinata degli stand in base al prezzo"""
-        # TODO
+        prezziStand = []
+        for stand in self._Stand.values():
+            prezzofinale =  stand.prezzo()
+            prezziStand.append((stand,prezzofinale))
 
+        listaordinata = sorted(prezziStand, key=itemgetter(1), reverse=True)
+        listastand = []
+        for coppia in listaordinata:
+            listastand.append(coppia[0])
+        return listastand
