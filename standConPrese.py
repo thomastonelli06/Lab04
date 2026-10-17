@@ -11,5 +11,5 @@ class StandConPrese(Stand):
 
 
     def __str__(self):
-        return f"{super().__str__()} - {self._nprese}"
+        return f"{super().__str__()} - n.prese:{self._nprese}"
 

@@ -9,4 +9,4 @@ class StandPremium(Stand):
         return self._prezzobase * 1.30
 
     def __str__(self):
-        return f"{super().__str__()} - {self._ingresso}"
+        return f"{super().__str__()} - esposizione: {self._ingresso}"
