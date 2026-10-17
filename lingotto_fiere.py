@@ -15,38 +15,40 @@ class LingottoFiere:
 
 
     def __str__(self):
-        return f"{self.__nome} : {len(self.__Stand)} {len(self.__Espositori)}"
+        return f"{self._nome} : {len(self._Stand)} {len(self._Espositori)}"
 
     """Aggiungere setter e getter se necessari"""
     @property
     def nome(self):
-            return self.__nome
+            return self._nome
     @nome.setter
     def nome(self, newName):
-            self.__nome = newName
+            self._nome = newName
 
 
 
     def carica_file_dati(self, file_path):
         """Carica i dati (stand ed espositori) dal file"""
-        with open(file_path) as file:
-            for line in file:
-                campi = line.strip().split()
-                codice = campi[0]
-                if codice.startswith("ES"):
+        try:
+            with open(file_path) as file:
+                for line in file:
+                    campi = line.strip().split(",")
+                    codice = campi[0]
+                    if codice.startswith("ES"):
 
-                    espositore = Espositore(codice, campi[1], campi[2])
-                    self._Espositori[codice] = espositore
-                elif len(campi) == 4:    #standard
-                    stand = Stand(codice, campi[1], campi[2], campi[3])
-                    self._Stand[codice] = stand
-                elif campi[4].isdigit():
-                    standElettr = StandConPrese(codice,campi[1], campi[2] ,campi[3],campi[4])
-                    self._Stand[codice] = stand
-                elif campi[4].isalpha():
-                    standPr = StandPremium(codice, campi[1], campi[2],campi[3],campi[4])
-                    self._Stand[codice] = stand
-
+                        espositore = Espositore(codice, campi[1], campi[2])
+                        self._Espositori[codice] = espositore
+                    elif len(campi) == 4:    #standard
+                        stand = Stand(codice, campi[1], campi[2], campi[3])
+                        self._Stand[codice] = stand
+                    elif campi[4].isdigit():
+                        standElettr = StandConPrese(codice,campi[1], campi[2] ,campi[3],campi[4])
+                        self._Stand[codice] = standElettr
+                    elif campi[4].isalpha():
+                        standPr = StandPremium(codice, campi[1], campi[2],campi[3],campi[4])
+                        self._Stand[codice] = standPr
+        except FileNotFoundError:
+            return f"file not found!"
 
 
 
@@ -54,11 +56,33 @@ class LingottoFiere:
 
     def assegna_stand_a_espositore(self, codice_stand, codice_espositore):
         """Associa uno stand a un espositore"""
-        # TODO
+
+        if codice_stand not in self._Stand:
+            raise ValueError("niente codice valido")
+
+        if codice_espositore not in self._Espositori:
+            raise ValueError("niente codice valido")
+
+        if not self._Stand[codice_stand]._disponibile:
+            raise ValueError("Stand nodisponibile")
+
+        if self._Espositori[codice_espositore]._proprieta is not None:
+            raise ValueError("Espositore già associato a uno stand")
+
+
+        self._Stand[codice_stand]._disponibile = False
+        self._Stand[codice_stand]._assegnato = codice_espositore
+        self._Espositori[codice_espositore]._proprieta = codice_stand
+
+
+
 
     def elenca_espositori(self):
         """Stampa l'elenco degli espositori mostrando, per ognuno, lo stand a cui è associato, quando applicabile """
-        # TODO
+        for espositore in self._Espositori:
+            if self._Espositori[espositore]._proprieta is not None:
+                 print(f"{espositore}, --- {self._Espositori[espositore]._proprieta} assegnato")
+            else: print(f"{espositore}")
 
     def stand_ordinati_per_prezzo(self):
         """Restituisce la lista ordinata degli stand in base al prezzo"""
