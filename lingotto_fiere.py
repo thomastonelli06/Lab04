@@ -29,26 +29,33 @@ class LingottoFiere:
 
     def carica_file_dati(self, file_path):
         """Carica i dati (stand ed espositori) dal file"""
-        try:
-            with open(file_path) as file:
-                for line in file:
-                    campi = line.strip().split(",")
-                    codice = campi[0]
-                    if codice.startswith("ES"):
 
-                        espositore = Espositore(codice, campi[1], campi[2])
-                        self._Espositori[codice] = espositore
-                    elif len(campi) == 4:    #standard
-                        stand = Stand(codice, campi[1], campi[2], campi[3])
-                        self._Stand[codice] = stand
-                    elif campi[4].isdigit():
-                        standElettr = StandConPrese(codice,campi[1], campi[2] ,campi[3],campi[4])
-                        self._Stand[codice] = standElettr
-                    elif campi[4].isalpha():
-                        standPr = StandPremium(codice, campi[1], campi[2],campi[3],campi[4])
-                        self._Stand[codice] = standPr
-        except FileNotFoundError:
-            return f"file not found!"
+
+            try:
+                with open(file_path) as file:
+                    for line in file:
+                        campi = line.strip().split(",")
+                        codice = campi[0]
+
+                        if codice.startswith("ES"):
+                            espositore = Espositore(codice, campi[1], campi[2])
+                            self._Espositori[codice] = espositore
+
+                        elif len(campi) == 4:  # standard
+                            stand = Stand(codice, campi[1], campi[2], float(campi[3]))
+                            self._Stand[codice] = stand
+
+                        elif campi[4].isdigit():
+                            standElettr = StandConPrese(codice, campi[1], campi[2], float(campi[3]), int(campi[4]))
+                            self._Stand[codice] = standElettr
+
+                        elif campi[4].isalpha():
+                            standPr = StandPremium(codice, campi[1], campi[2], float(campi[3]), campi[4])
+                            self._Stand[codice] = standPr
+
+            except FileNotFoundError:
+                raise
+
 
 
 
@@ -71,8 +78,8 @@ class LingottoFiere:
 
 
         self._Stand[codice_stand]._disponibile = False
-        self._Stand[codice_stand]._assegnato = codice_espositore
-        self._Espositori[codice_espositore]._proprieta = codice_stand
+        self._Stand[codice_stand]._assegnato = self._Espositori[codice_espositore]
+        self._Espositori[codice_espositore]._proprieta = self._Stand[codice_stand]
 
 
 
