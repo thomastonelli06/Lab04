@@ -99,7 +99,7 @@ class LingottoFiere:
             prezzofinale =  stand.prezzo()
             prezziStand.append((stand,prezzofinale))
 
-        listaordinata = sorted(prezziStand, key=itemgetter(1), reverse=True)
+        listaordinata = sorted(prezziStand, key=itemgetter(1))
         listastand = []
         for coppia in listaordinata:
             listastand.append(coppia[0])

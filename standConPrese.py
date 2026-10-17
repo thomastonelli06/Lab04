@@ -5,7 +5,7 @@ class StandConPrese(Stand):
         super().__init__(cod, sup, npad, prezzobase)
         self._nprese = nprese
 
-    def prezzo(self, nprese):
+    def prezzo(self):
 
         return self._prezzobase * (1 + 0.07 * self._nprese)
 
