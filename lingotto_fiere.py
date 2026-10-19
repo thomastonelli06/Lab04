@@ -33,26 +33,26 @@ class LingottoFiere:
 
 
         try:
-                with open(file_path) as file:
-                    for line in file:
-                        campi = line.strip().split(",")
-                        codice = campi[0]
+            with open(file_path, "r") as file:
+                for line in file:
+                    campi = line.strip().split(",")
+                    codice = campi[0]
 
-                        if codice.startswith("ES"):
-                            espositore = Espositore(codice, campi[1], campi[2])
-                            self._Espositori[codice] = espositore
+                    if codice.startswith("ES"):
+                        espositore = Espositore(codice, campi[1], campi[2])
+                        self._Espositori[codice] = espositore
 
-                        elif len(campi) == 4:  # standard
-                            stand = Stand(codice, campi[1], campi[2], float(campi[3]))
-                            self._Stand[codice] = stand
+                    elif len(campi) == 4:
+                        stand = Stand(codice, int(campi[1]), int(campi[2]), float(campi[3]))
+                        self._Stand[codice] = stand
 
-                        elif campi[4].isdigit():
-                            standElettr = StandConPrese(codice, campi[1], campi[2], float(campi[3]), int(campi[4]))
-                            self._Stand[codice] = standElettr
+                    elif campi[4].isdigit():
+                        standElettr = StandConPrese(codice, int(campi[1]), int(campi[2]), float(campi[3]), int(campi[4]))
+                        self._Stand[codice] = standElettr
 
-                        elif campi[4].isalpha():
-                            standPr = StandPremium(codice, campi[1], campi[2], float(campi[3]), campi[4])
-                            self._Stand[codice] = standPr
+                    elif campi[4].isalpha():
+                        standPr = StandPremium(codice, int(campi[1]), int(campi[2]), float(campi[3]), campi[4])
+                        self._Stand[codice] = standPr
 
         except FileNotFoundError:
                 raise
@@ -88,9 +88,9 @@ class LingottoFiere:
     def elenca_espositori(self):
         """Stampa l'elenco degli espositori mostrando, per ognuno, lo stand a cui è associato, quando applicabile """
         for espositore in self._Espositori:
-            if self._Espositori[espositore]._proprieta is not None:
-                 print(f"{espositore}, --- {self._Espositori[espositore]._proprieta} assegnato")
-            else: print(f"{espositore}")
+            if espositore._proprieta is not None:
+                 print(f"{espositore}, --- {espositore._proprieta} assegnato")
+            else: print(f"{espositore}--- nessuno stand")
 
     def stand_ordinati_per_prezzo(self):
         """Restituisce la lista ordinata degli stand in base al prezzo"""

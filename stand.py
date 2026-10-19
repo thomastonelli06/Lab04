@@ -12,5 +12,5 @@ class Stand:
         return self._prezzobase
 
     def __str__(self):
-        return f"{self._cod} - {self._sup} mq - padiglione{self._npad} - prezzo {self._prezzobase}"
+        return f"{self._cod} - {self._sup} mq - padiglione{self._npad} - prezzo {self.prezzo()}"
 
